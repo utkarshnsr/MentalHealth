@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button bTakePicture, bRecording;
     private ImageCapture imageCapture;
     private VideoCapture videoCapture;
+
+    public static int questionIndex = 0;
+    public static String[] questions = {"Tell me something interesting that happened to you today..","How are you feeling?","Are you excited about today?"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public void getNextQuestion(View view) {
+        int nextIndex;
+        if (MainActivity.questionIndex == (MainActivity.questions.length - 1)) {
+            nextIndex = MainActivity.questions.length - 1;
+        } else {
+            nextIndex = Math.abs((MainActivity.questionIndex + 1)) % (MainActivity.questions.length);
+        }
+        TextView tv1 = (TextView)findViewById(R.id.questionTextView);
+        tv1.setText(questions[nextIndex]);
+        MainActivity.questionIndex = nextIndex;
+    }
+
+    public void getPreviousQuestion(View view) {
+        int previousIndex;
+        if (MainActivity.questionIndex == 0) {
+            previousIndex = 0;
+        } else {
+            previousIndex = Math.abs((MainActivity.questionIndex - 1)) % (MainActivity.questions.length);
+        }
+        TextView tv1 = (TextView)findViewById(R.id.questionTextView);
+        tv1.setText(questions[previousIndex]);
+        MainActivity.questionIndex = previousIndex;
+    }
     private Executor getExecutor() {
         return ContextCompat.getMainExecutor(this);
     }
@@ -73,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cameraProvider.unbindAll();
 
         CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
                 .build();
 
         Preview preview = new Preview.Builder().build();

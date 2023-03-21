@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="330dp"
@@ -17,7 +18,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.143">
+        <TextView
+            android:id="@+id/questionTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="Tell me something interesting that happened to you today..."
+            android:textSize="20sp"
+            android:gravity="center_horizontal"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/previousquestionbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:paddingRight="30dp"
+                android:text="Prev Question"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                android:onClick="getPreviousQuestion"/>
 
+            <Button
+                android:id="@+id/nextquestionbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:onClick="getNextQuestion"
+                android:text="Next Question"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />/>
+        </LinearLayout>
         <view
             android:id="@+id/previewView"
             class="androidx.camera.view.PreviewView"
@@ -29,7 +65,7 @@
         android:id="@+id/bCapture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="Capture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -41,11 +77,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="160dp"
+        android:layout_marginBottom="60dp"
         android:text="Record"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/bCapture"
         app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="@+id/bCapture"
-        app:layout_constraintTop_toBottomOf="@+id/bCapture" />
+        app:layout_constraintTop_toBottomOf="@+id/bCapture"
+        app:layout_constraintVertical_bias="0.059" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
