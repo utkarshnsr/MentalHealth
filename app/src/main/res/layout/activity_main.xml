@@ -23,7 +23,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:text="Tell me smething interesting that happened to you today..."
+            android:text="Tell me something interesting that happened to you today..."
             android:textSize="20sp"
             android:gravity="center_horizontal"/>
         <LinearLayout
