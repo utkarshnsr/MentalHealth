@@ -26,6 +26,9 @@ import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
@@ -172,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new VideoCapture.OnVideoSavedCallback() {
                         @Override
                         public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
-                            Toast.makeText(MainActivity.this,"Saving...",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this,"Saving your video...",Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -182,8 +185,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
             );
+            String filename = Long.toString(timeStamp) + ".mp4";
+            readData(filename);
+
+        }
+    }
 
 
+    private void readData(String filename)
+    {
+        System.out.println("INSIDE THE READ DATA METHOD 1");
+        try
+        {
+            FileInputStream fin = openFileInput(filename);
+            int a;
+            StringBuilder temp = new StringBuilder();
+            while ((a = fin.read()) != -1)
+            {
+                temp.append((char)a);
+            }
+            System.out.println("INSIDE READ DATA");
+            System.out.println(temp);
+
+            // setting text from the file.
+            fin.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
