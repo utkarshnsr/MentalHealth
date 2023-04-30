@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,7 +36,8 @@ import java.util.concurrent.Executor;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     PreviewView previewView;
-
+    private File storage;
+    private String[] storagePaths;
     Button bTakePicture, bRecording;
     private ImageCapture imageCapture;
     private VideoCapture videoCapture;
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         bTakePicture.setOnClickListener(this);
         bRecording.setOnClickListener(this);
+
+
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
@@ -185,8 +189,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
             );
-            String filename = Long.toString(timeStamp) + ".mp4";
-            readData(filename);
+            //System.out.println("IN LOADING STAGE (BOLD)");
+            storagePaths = StorageUtil.getStorageDirectories(this);
+            //System.out.println("HELLO");
+            //System.out.println(storagePaths);
+
+            for (String path : storagePaths) {
+                storage = new File(path);
+                //System.out.println("PRINTING STORAGE");
+                System.out.println(storage);
+                Method.load_Directory_Files(storage);
+            }
 
         }
     }

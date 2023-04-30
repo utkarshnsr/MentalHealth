@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="330dp"
-        android:layout_height="376dp"
+        android:layout_height="500dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,47 +18,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.143">
+
         <TextView
             android:id="@+id/questionTextView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
+            android:gravity="center_horizontal"
             android:text="Tell me something interesting that happened to you today..."
-            android:textSize="20sp"
-            android:gravity="center_horizontal"/>
+            android:textSize="20sp" />
+
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/previousquestionbutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:paddingRight="30dp"
-                android:text="Prev Question"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-                android:onClick="getPreviousQuestion"/>
+            android:layout_height="wrap_content"></LinearLayout>
 
-            <Button
-                android:id="@+id/nextquestionbutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:onClick="getNextQuestion"
-                android:text="Next Question"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />/>
-        </LinearLayout>
         <view
             android:id="@+id/previewView"
             class="androidx.camera.view.PreviewView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp" />
+
     </LinearLayout>
 
     <Button
@@ -67,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Capture"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,10 +61,35 @@
         android:text="Record"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/bCapture"
-        app:layout_constraintHorizontal_bias="0.545"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="@+id/bCapture"
         app:layout_constraintTop_toBottomOf="@+id/bCapture"
-        app:layout_constraintVertical_bias="0.059" />
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/nextquestionbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:onClick="getNextQuestion"
+        android:paddingLeft="10dp"
+        android:text="Next Question"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.844"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <Button
+        android:id="@+id/previousquestionbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:onClick="getPreviousQuestion"
+        android:text="Prev Question"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.144"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
