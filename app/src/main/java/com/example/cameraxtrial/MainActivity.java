@@ -189,17 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
             );
-            //System.out.println("IN LOADING STAGE (BOLD)");
-            storagePaths = StorageUtil.getStorageDirectories(this);
-            //System.out.println("HELLO");
-            //System.out.println(storagePaths);
 
-            for (String path : storagePaths) {
-                storage = new File(path);
-                //System.out.println("PRINTING STORAGE");
-                System.out.println(storage);
-                Method.load_Directory_Files(storage);
-            }
 
         }
     }
