@@ -13,6 +13,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [            "DROPBOX_APP_KEY": "gsjj1ierlb3g3dw",            "DROPBOX_ACCESS_TOKEN": "sl.BbxIe0RUvKZ9e7iF5SCcVD4ALjJD8GAEQ-7NncXnWFTISujAIuP0WUOC0Q2aib_Sb_Mbkse0Gs7cvg3QBnUmgfmno4-BrVb1wcKS0AvGQJ6EpPID6fW3HjeaEE0F7XYGhAtkJeI"        ]
     }
 
     buildTypes {
@@ -43,4 +44,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+// Dropbox SDK
+    implementation 'com.dropbox.core:dropbox-core-sdk:4.0.0'
+
+//Coroutine
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
 }

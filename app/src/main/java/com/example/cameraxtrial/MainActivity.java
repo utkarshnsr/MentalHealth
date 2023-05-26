@@ -18,32 +18,48 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dropbox.core.DbxException;
+import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.WriteMode;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import kotlinx.coroutines.CoroutineScope;
+import kotlinx.coroutines.Dispatchers;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     PreviewView previewView;
-    private File storage;
-    private String[] storagePaths;
+
     Button bTakePicture, bRecording;
     private ImageCapture imageCapture;
     private VideoCapture videoCapture;
-
+    private File outputDirectory;
+    private String currentVideoPath;
     public static int questionIndex = 0;
     public static String[] questions = {"Tell me something interesting that happened to you today..","How are you feeling?","Are you excited about today?"};
+    public static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         bTakePicture.setOnClickListener(this);
         bRecording.setOnClickListener(this);
-
-
-
+        outputDirectory =  getOutputDirectory();
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
             try {
@@ -157,7 +171,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timeStamp);
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+            String filename = Long.toString(timeStamp) + ".mp4";
 
+            currentVideoPath = getVideoFilePath();
+            File videoFile = new File(currentVideoPath);
+            VideoCapture.OutputFileOptions outputFileOptions = new VideoCapture.OutputFileOptions.Builder(videoFile).build();
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -169,17 +187,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
+
+            //This is the code that works properly
             videoCapture.startRecording(
-                    new VideoCapture.OutputFileOptions.Builder(
-                            getContentResolver(),
-                            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                            contentValues
-                    ).build(),
+                    outputFileOptions,
                     getExecutor(),
                     new VideoCapture.OnVideoSavedCallback() {
                         @Override
                         public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
                             Toast.makeText(MainActivity.this,"Saving your video...",Toast.LENGTH_SHORT).show();
+                            Executor executor = Executors.newSingleThreadExecutor();
+                            executor.execute(() -> uploadVideoToDropbox(videoFile));
                         }
 
                         @Override
@@ -189,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
             );
-
+            readData(filename);
 
         }
     }
@@ -247,5 +265,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
 
+    }
+    private void uploadVideoToDropbox(File videoFile) {
+        String accessToken = "sl.BdEImRPQ2PRsXrCODTJteb-1DqyBx_M9L9wBCORc5mQjbv0t1dVtALWlMtlYWacGO_tuP7H2rAlo6tgaoxemAo365wAnhaKvJ5E0_LAqrNFnQF13mstO5hLP14S8zbjWgoHkKuCCZ1Y";
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try (InputStream inputStream = new FileInputStream(videoFile)) {
+                DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/java-tutorial").build();
+                DbxClientV2 client = new DbxClientV2(config, accessToken);
+                String remotePath = "/Videos/" + videoFile.getName();
+                FileMetadata metadata = client.files().uploadBuilder(remotePath).uploadAndFinish(inputStream);
+                Log.i(TAG, "Video uploaded to Dropbox: " + metadata.getPathLower());
+            } catch (DbxException | IOException e) {
+                Log.e(TAG, "Error uploading video to Dropbox", e);
+            }
+        });
+    }
+    private File getOutputDirectory() {
+        File mediaDir = getExternalMediaDirs()[0];
+        File appDir = new File(mediaDir, "CameraXApp");
+        appDir.mkdirs();
+        return appDir;
+    }
+
+    private String getVideoFilePath() {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        return outputDirectory.getAbsolutePath() + File.separator + "VIDEO_" + timeStamp + ".mp4";
     }
 }
